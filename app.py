@@ -92,7 +92,7 @@ fig, ax = plt.subplots(figsize=(12, 6))
 if visu_type == "Graphique":
     # Courbe des valeurs réelles et de la cible
     ax.plot(df_agg["Date"], df_agg["Nombre d'utilisateurs"], label="Utilisateurs actifs",
-            marker="o", linewidth=2, color="#1f77b4")
+            linewidth=2, color="#1f77b4")
     ax.plot(df_agg["Date"], df_agg["Nombre total d'utilisateurs potentiels"], label="Utilisateurs potentiels",
             linestyle="--", marker="x", linewidth=2, color="#ff7f0e")
     ax.plot(df_agg["Date"], df_agg["TargetActive"], label="Target (30%)", linestyle=":", linewidth=2, color="#2ca02c")
