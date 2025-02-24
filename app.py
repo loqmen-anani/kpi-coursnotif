@@ -2,6 +2,12 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+st.set_page_config(
+    page_title="KPI CoursNotif",       # Le nom de l'onglet
+    page_icon="logo.png",               # Chemin vers ton logo (peut être une image ou un emoji)
+    layout="centered"                   # Optionnel : "centered" ou "wide"
+)
 # Utiliser un style agréable pour matplotlib
 plt.style.use("seaborn-v0_8-talk")
 
