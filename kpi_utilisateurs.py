@@ -66,7 +66,7 @@ def generate_app_usage_data(start_date, num_days, target_users, final_usage_perc
 start_date = "01/06/2025"
 num_days = 1000  # Période de simulation (par exemple, 300 jours)
 target_users = 3410  # Nombre total d'utilisateurs potentiels cible
-final_usage_percentage = 0.21  # Pourcentage final d'utilisateurs actifs
+final_usage_percentage = 0.05  # Pourcentage final d'utilisateurs actifs
 
 # Génération des données
 df = generate_app_usage_data(start_date, num_days, target_users, final_usage_percentage)

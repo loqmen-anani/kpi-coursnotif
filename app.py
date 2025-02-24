@@ -1,21 +1,23 @@
+import io
 import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
 import matplotlib.pyplot as plt
-import io
-
 
 st.set_page_config(
     page_title="KPI CoursNotif",       # Le nom de l'onglet
-    page_icon="logo.png",               # Chemin vers ton logo (peut être une image ou un emoji)
-    layout="centered"                   # Optionnel : "centered" ou "wide"
+    page_icon="logo.png",              # Chemin vers ton logo (peut être une image ou un emoji)
+    layout="centered"                  # Optionnel : "centered" ou "wide"
 )
 # Utiliser un style agréable pour matplotlib
 plt.style.use("seaborn-v0_8-talk")
 
+# Toggle pour sélectionner Réussite ou Échec
+statut = st.radio("Sélectionnez le statut", options=["Réussite", "Échec"], index=0)
+filename = "donnees_utilisateurs.csv" if statut == "Réussite" else "donnees_utilisateurs_echec.csv"
 
-# Charger les données
-df = pd.read_csv("donnees_utilisateurs.csv")
+# Charger les données en fonction du statut
+df = pd.read_csv(filename)
 df["Date"] = pd.to_datetime(df["Date"], dayfirst=True, errors='coerce')
 
 # Mapping des mois en français
@@ -88,15 +90,14 @@ if not df_agg.empty:
     col1, col2, col3 = st.columns(3)
     col1.metric("Utilisateurs actifs", int(dernier["Nombre d'utilisateurs"]))
     col2.metric("Utilisateurs potentiels", int(dernier["Nombre total d'utilisateurs potentiels"]))
-    # print in green if the percentage is above 30% and in red otherwise
     if dernier["PourcentageUtilisateurs"] >= 0.30:
         col3.markdown(
-            f"<h3 style='text-align: center; color: green;'>Pourcentage d'utilisateurs : {dernier['PourcentageUtilisateurs']:.2%}</h3>",
+            f"<h3 style='text-align: center; color: green;'>Pourcentage d'utilisateurs : {dernier['PourcentageUtilisateurs']:.2%} 😊</h3>",
             unsafe_allow_html=True
         )
     else:
         col3.markdown(
-            f"<h3 style='text-align: center; color: red;'>Pourcentage d'utilisateurs : {dernier['PourcentageUtilisateurs']:.2%}</h3>",
+            f"<h3 style='text-align: center; color: red;'>Pourcentage d'utilisateurs : {dernier['PourcentageUtilisateurs']:.2%} 😞</h3>",
             unsafe_allow_html=True
         )
 else:
@@ -121,7 +122,6 @@ else:
            alpha=0.5, color="#ff7f0e")
     ax.plot(df_agg["Date"], df_agg["TargetActive"], label="Target (30%)", linestyle="--", linewidth=2, color="#2ca02c")
 
-# ax.set_title("Évolution des utilisateurs", fontsize=16, fontweight="bold", color="#333333")
 ax.set_xlabel("Date", fontsize=14, color="#333333")
 ax.set_ylabel("Nombre d'utilisateurs", fontsize=14, color="#333333")
 ax.legend(fontsize=8)
@@ -133,7 +133,6 @@ buf = io.StringIO()
 fig.savefig(buf, format="svg")
 svg = buf.getvalue()
 
-
 # Encapsuler le SVG dans une div avec overflow pour éviter qu'il soit tronqué
 html_code = f"""
 <div style="width:100%; overflow-x:auto;">
@@ -141,8 +140,5 @@ html_code = f"""
 </div>
 """
 
-# Ajuste la hauteur (par exemple 800) pour que le plot ne soit plus tronqué
+# Ajuste la hauteur et la largeur pour un affichage optimal
 components.html(html_code, height=800, width=1000, scrolling=True)
-
-
-
