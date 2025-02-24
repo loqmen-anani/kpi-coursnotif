@@ -33,7 +33,7 @@ mois_numeriques = sorted(df["Date"].dt.month.unique())
 mois_noms = [mois_dict[m] for m in mois_numeriques]
 
 # Titre du dashboard
-st.markdown("<h1 style='text-align: center; color: #4CAF50;'>KPI de l'application CoursNotif</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #982926;'>KPI de l'application CoursNotif</h1>", unsafe_allow_html=True)
 
 # Filtres
 st.markdown("### Filtres")
