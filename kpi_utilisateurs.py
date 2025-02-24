@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 def generate_app_usage_data(start_date, num_days, target_users, final_usage_percentage):
     # Paramètres de la croissance exponentielle
-    growth_rate = 0.1  # Taux de croissance initial
+    growth_rate = 0.01  # Taux de croissance initial
     # Définir le jour de stabilisation : avant ce jour, la croissance suit une loi exponentielle avec du bruit,
     # et au jour de stabilisation, on force l'atteinte du maximum.
     stabilization_day = int(num_days // 2)  # par exemple, la moitié de la période simulée
