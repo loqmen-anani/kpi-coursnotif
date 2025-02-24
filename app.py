@@ -1,6 +1,8 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import matplotlib.pyplot as plt
+import io
 
 
 st.set_page_config(
@@ -29,15 +31,15 @@ mois_numeriques = sorted(df["Date"].dt.month.unique())
 mois_noms = [mois_dict[m] for m in mois_numeriques]
 
 # Titre du dashboard
-st.markdown("<h1 style='text-align: center; color: #4CAF50;'>Dashboard d'Utilisation de l'Application</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #4CAF50;'>KPI de l'application CoursNotif</h1>", unsafe_allow_html=True)
 
 # Filtres
 st.markdown("### Filtres")
 col1, col2 = st.columns(2)
 with col1:
-    selected_annees = st.multiselect("Sélectionnez l'année", options=annees, default=annees)
+    selected_annees = st.multiselect("Années", options=annees, default=annees)
 with col2:
-    selected_mois_noms = st.multiselect("Sélectionnez le(s) mois", options=mois_noms, default=mois_noms)
+    selected_mois_noms = st.multiselect("Mois", options=mois_noms, default=mois_noms)
 
 # Conversion des mois sélectionnés en chiffres
 selected_mois = []
@@ -54,7 +56,7 @@ df_filtered = df[
 
 # Choix du niveau d'agrégation
 st.markdown("### Niveau d'agrégation")
-aggregation = st.radio("Choisissez le niveau d'agrégation", options=["Journalier", "Mensuel", "Annuel"], index=0)
+aggregation = st.radio("", options=["Journalier", "Mensuel", "Annuel"], index=0)
 
 if aggregation == "Mensuel":
     df_filtered = df_filtered.copy()
@@ -86,7 +88,17 @@ if not df_agg.empty:
     col1, col2, col3 = st.columns(3)
     col1.metric("Utilisateurs actifs", int(dernier["Nombre d'utilisateurs"]))
     col2.metric("Utilisateurs potentiels", int(dernier["Nombre total d'utilisateurs potentiels"]))
-    col3.metric("Pourcentage d'utilisateurs", f"{dernier['PourcentageUtilisateurs']:.2%}")
+    # print in green if the percentage is above 30% and in red otherwise
+    if dernier["PourcentageUtilisateurs"] >= 0.30:
+        col3.markdown(
+            f"<h3 style='text-align: center; color: green;'>Pourcentage d'utilisateurs : {dernier['PourcentageUtilisateurs']:.2%}</h3>",
+            unsafe_allow_html=True
+        )
+    else:
+        col3.markdown(
+            f"<h3 style='text-align: center; color: red;'>Pourcentage d'utilisateurs : {dernier['PourcentageUtilisateurs']:.2%}</h3>",
+            unsafe_allow_html=True
+        )
 else:
     st.error("Aucune donnée ne correspond aux filtres sélectionnés.")
 
@@ -94,9 +106,8 @@ else:
 st.markdown("### Visualisation")
 visu_type = st.radio("Type de visualisation", options=["Graphique", "Histogramme"], index=0)
 
-fig, ax = plt.subplots(figsize=(12, 6))
+fig, ax = plt.subplots(figsize=(7.5, 4))
 if visu_type == "Graphique":
-    # Courbe des valeurs réelles et de la cible
     ax.plot(df_agg["Date"], df_agg["Nombre d'utilisateurs"], label="Utilisateurs actifs",
             linewidth=2, color="#1f77b4")
     ax.plot(df_agg["Date"], df_agg["Nombre total d'utilisateurs potentiels"], label="Utilisateurs potentiels",
@@ -108,13 +119,30 @@ else:
            alpha=0.8, color="#1f77b4")
     ax.bar(df_agg["Date"], df_agg["Nombre total d'utilisateurs potentiels"], width=width, label="Utilisateurs potentiels",
            alpha=0.5, color="#ff7f0e")
-    # Ajouter la courbe de la target sur le même graphique
     ax.plot(df_agg["Date"], df_agg["TargetActive"], label="Target (30%)", linestyle="--", linewidth=2, color="#2ca02c")
 
-ax.set_title("Évolution des utilisateurs", fontsize=16, fontweight="bold", color="#333333")
+# ax.set_title("Évolution des utilisateurs", fontsize=16, fontweight="bold", color="#333333")
 ax.set_xlabel("Date", fontsize=14, color="#333333")
 ax.set_ylabel("Nombre d'utilisateurs", fontsize=14, color="#333333")
-ax.legend(fontsize=12)
-plt.xticks(rotation=45, fontsize=10)
-plt.yticks(fontsize=10)
-st.pyplot(fig)
+ax.legend(fontsize=8)
+plt.xticks(rotation=45, fontsize=6)
+plt.yticks(fontsize=8)
+
+# Exporter la figure en SVG et l'afficher vectoriellement
+buf = io.StringIO()
+fig.savefig(buf, format="svg")
+svg = buf.getvalue()
+
+
+# Encapsuler le SVG dans une div avec overflow pour éviter qu'il soit tronqué
+html_code = f"""
+<div style="width:100%; overflow-x:auto;">
+    {svg}
+</div>
+"""
+
+# Ajuste la hauteur (par exemple 800) pour que le plot ne soit plus tronqué
+components.html(html_code, height=800, width=1000, scrolling=True)
+
+
+
