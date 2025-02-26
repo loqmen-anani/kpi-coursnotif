@@ -12,7 +12,7 @@ st.set_page_config(
 plt.style.use("seaborn-v0_8-talk")
 
 # Toggle pour sélectionner Réussite ou Échec
-statut = st.radio("Sélectionnez le statut", options=["Réussite", "Échec"], index=0)
+statut = st.radio("Données", options=["Réussite", "Échec"], index=0)
 filename = "donnees_utilisateurs.csv" if statut == "Réussite" else "donnees_utilisateurs_echec.csv"
 
 # Charger les données en fonction du statut
