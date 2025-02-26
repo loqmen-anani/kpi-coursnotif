@@ -130,7 +130,7 @@ with right_col:
     ax.set_xlabel("Date", fontsize=14, color="#333333")
     ax.set_ylabel("Nombre d'utilisateurs", fontsize=14, color="#333333")
     ax.legend(fontsize=8)
-    plt.xticks(rotation=45, fontsize=6)
+    plt.xticks(rotation=45, fontsize=7)
     plt.yticks(fontsize=8)
 
     # Exporter la figure en SVG et l'afficher de manière vectorisée
