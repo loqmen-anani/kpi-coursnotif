@@ -109,7 +109,7 @@ with left_col:
 
 with right_col:
     # Création du plot
-    fig, ax = plt.subplots(figsize=(10, 7))
+    fig, ax = plt.subplots(figsize=(7.5, 5))
     if visu_type == "Graphique":
         ax.plot(df_agg["Date"], df_agg["Nombre d'utilisateurs"], label="Utilisateurs actifs",
                 linewidth=2, color="#1f77b4")
