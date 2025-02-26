@@ -109,7 +109,7 @@ with left_col:
 
 with right_col:
     # Création du plot
-    fig, ax = plt.subplots(figsize=(7.5, 4))
+    fig, ax = plt.subplots(figsize=(10, 7))
     if visu_type == "Graphique":
         ax.plot(df_agg["Date"], df_agg["Nombre d'utilisateurs"], label="Utilisateurs actifs",
                 linewidth=2, color="#1f77b4")
@@ -142,4 +142,4 @@ with right_col:
         {svg}
     </div>
     """
-    components.html(html_code, height=800, width=1000, scrolling=True)
+    components.html(html_code, height=1200, width=1500, scrolling=True)
